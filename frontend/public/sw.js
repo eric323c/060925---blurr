@@ -1,0 +1,14 @@
+self.addEventListener('install', event => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', event => {
+  // Basic offline handling
+  event.respondWith(
+    caches.match(event.request).then(response => response || fetch(event.request))
+  );
+});
