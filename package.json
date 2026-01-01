@@ -1,5 +1,12 @@
 {
+  "name": "wink-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install --no-audit --no-fund && npm run export",
+    "start": "node backend/src/index.js",
+    "replit:start": "npm run build && npm start"
+  },
   "dependencies": {
-    "socket.io-client": "^4.8.3"
+    "concurrently": "^8.0.1"
   }
 }
