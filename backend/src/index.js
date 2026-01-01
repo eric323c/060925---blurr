@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Blurr backend running');
+  res.send('Wink backend running');
 });
 
 const server = http.createServer(app);
