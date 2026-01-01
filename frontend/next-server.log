@@ -3,11 +3,11 @@
 > next start
 
 ▲ Next.js 16.1.1
-- Local:         http://localhost:12000
-- Network:       http://10.2.28.139:12000
+- Local:         http://localhost:3000
+- Network:       http://10.2.28.139:3000
 
 ✓ Starting...
 ⚠ Invalid next.config.js options detected: 
 ⚠     Unrecognized key(s) in object: 'swcMinify'
 ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
-✓ Ready in 187ms
+✓ Ready in 172ms
