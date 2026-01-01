@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 import styles from '../styles/Home.module.css';
 
 type User = {
@@ -24,6 +25,7 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [lastWink, setLastWink] = useState<number | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     // small demo: rotate a fake presence status every few seconds
@@ -33,9 +35,32 @@ export default function Home() {
     return () => clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    // connect to backend socket.io when started
+    if (!started) return;
+    const s = io((process.env.NEXT_PUBLIC_SOCKET_URL as string) || 'http://localhost:4000');
+    setSocket(s);
+
+    s.on('connect', () => console.log('socket connected', s.id));
+    s.on('wink', ({ fromId, toId }) => {
+      // increment winks for target id
+      setUsers((u) => u.map((x) => (x.id === toId ? { ...x, winks: x.winks + 1 } : x)));
+      setLastWink(toId);
+      setTimeout(() => setLastWink(null), 700);
+    });
+
+    return () => {
+      s.disconnect();
+      setSocket(null);
+    };
+  }, [started]);
+
   function handleWink(id: number) {
     setUsers((u) => u.map((x) => (x.id === id ? { ...x, winks: x.winks + 1 } : x)));
     setLastWink(id);
+    if (socket && socket.connected) {
+      socket.emit('wink', { fromId: socket.id, toId: id });
+    }
     setTimeout(() => setLastWink(null), 700);
   }
 
