@@ -9,6 +9,9 @@
     "cors": "latest",
     "express": "latest",
     "socket.io": "latest",
-    "socket.io-client": "^4.8.3"
+    "socket.io-client": "^4.8.3",
+    "sqlite3": "latest",
+    "bcryptjs": "latest",
+    "jsonwebtoken": "latest"
   }
 }
