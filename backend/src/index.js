@@ -25,12 +25,28 @@ io.on('connection', socket => {
   socket.join('nearby');
 
   socket.on('wink', ({ fromId, toId }) => {
-    // broadcast wink to room so other clients can update
-    io.to('nearby').emit('wink', { fromId, toId });
+    // persist wink in sqlite
+    const stmt = `INSERT INTO winks (from_user, to_user) VALUES (?, ?)`;
+    db.run(stmt, [fromId || null, toId || null], function(err) {
+      if (err) console.error('db insert wink error', err);
+      // broadcast wink to room so other clients can update
+      io.to('nearby').emit('wink', { fromId, toId });
+    });
+  });
+
+  socket.on('message', ({ fromId, toId, body }) => {
+    const stmt = `INSERT INTO messages (from_user, to_user, body) VALUES (?, ?, ?)`;
+    db.run(stmt, [fromId || null, toId || null, body || ''], function(err) {
+      if (err) console.error('db insert message error', err);
+      io.to('nearby').emit('message', { fromId, toId, body, id: this.lastID });
+    });
   });
 
   socket.on('disconnect', () => console.log('user disconnected', socket.id));
 });
+
+// run migrations
+migrate();
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
