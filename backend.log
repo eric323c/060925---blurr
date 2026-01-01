@@ -1,0 +1,5 @@
+
+> wink-backend@0.1.0 start
+> node src/index.js
+
+Server listening on port 4000
