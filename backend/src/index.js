@@ -19,8 +19,17 @@ const io = new Server(server, {
 });
 
 io.on('connection', socket => {
-  console.log('user connected');
-  socket.on('disconnect', () => console.log('user disconnected'));
+  console.log('user connected', socket.id);
+
+  // join a default room for demo purposes
+  socket.join('nearby');
+
+  socket.on('wink', ({ fromId, toId }) => {
+    // broadcast wink to room so other clients can update
+    io.to('nearby').emit('wink', { fromId, toId });
+  });
+
+  socket.on('disconnect', () => console.log('user disconnected', socket.id));
 });
 
 const PORT = process.env.PORT || 4000;
