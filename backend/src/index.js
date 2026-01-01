@@ -21,6 +21,14 @@ app.get('/', (req, res) => {
 
 // serve uploaded files
 app.use('/uploads', express.static(path.resolve(__dirname, '../data/uploads')));
+// serve frontend static build if exists
+const frontendOut = path.resolve(__dirname, '../../frontend/out');
+if (require('fs').existsSync(frontendOut)) {
+  app.use(express.static(frontendOut));
+  // SPA fallback
+  app.get('*', (req, res) => res.sendFile(path.join(frontendOut, 'index.html')));
+}
+
 
 const server = http.createServer(app);
 const io = new Server(server, {

@@ -1,0 +1,2 @@
+run = "npm run replit:start"
+language = "nodejs"
