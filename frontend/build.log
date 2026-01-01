@@ -1,0 +1,31 @@
+
+> blurr-frontend@0.1.0 build
+> next build
+
+⚠ Invalid next.config.js options detected: 
+⚠     Unrecognized key(s) in object: 'swcMinify'
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /workspace/project/060925---blurr/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /workspace/project/060925---blurr/frontend/package-lock.json
+
+▲ Next.js 16.1.1 (Turbopack)
+
+  Running TypeScript ...
+  Creating an optimized production build ...
+✓ Compiled successfully in 1478.5ms
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/3) ...
+✓ Generating static pages using 3 workers (3/3) in 73.6ms
+  Finalizing page optimization ...
+
+Route (pages)
+┌ ○ /
+├   /_app
+└ ○ /404
+
+○  (Static)  prerendered as static content
+
