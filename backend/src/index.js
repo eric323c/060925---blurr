@@ -2,14 +2,23 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const path = require('path');
+
+const { db, migrate } = require('./db');
+const { router: authRouter, authMiddleware, JWT_SECRET } = require('./auth');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/auth', authRouter);
+
 app.get('/', (req, res) => {
   res.send('Wink backend running');
 });
+
+// serve uploaded files
+app.use('/uploads', express.static(path.resolve(__dirname, '../data/uploads')));
 
 const server = http.createServer(app);
 const io = new Server(server, {
