@@ -1,10 +1,10 @@
 {
-  "name": "Blurr",
-  "short_name": "Blurr",
+  "name": "Wink",
+  "short_name": "Wink",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "description": "Blurr messaging PWA",
+  "description": "Wink messaging PWA",
   "icons": [
     {
       "src": "/icon-192.png",
