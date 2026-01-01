@@ -12,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
+const usersRouter = require('./users');
+app.use('/api/users', usersRouter);
 
 app.get('/', (req, res) => {
   res.send('Wink backend running');
@@ -27,13 +29,30 @@ const io = new Server(server, {
   },
 });
 
+
+// socket auth
+io.use((socket, next) => {
+  const token = socket.handshake.auth && socket.handshake.auth.token;
+  if(!token) return next(new Error('no token'));
+  try{
+    const jwt = require('jsonwebtoken');
+    const { JWT_SECRET } = require('./auth');
+    const payload = jwt.verify(token, JWT_SECRET);
+    socket.user = payload;
+    return next();
+  }catch(e){
+    return next(new Error('invalid token'));
+  }
+});
+
 io.on('connection', socket => {
   console.log('user connected', socket.id);
 
   // join a default room for demo purposes
   socket.join('nearby');
 
-  socket.on('wink', ({ fromId, toId }) => {
+  socket.on('wink', ({ toId }) => {
+  const fromId = socket.user && socket.user.id; if(!fromId) return;
     // persist wink in sqlite
     const stmt = `INSERT INTO winks (from_user, to_user) VALUES (?, ?)`;
     db.run(stmt, [fromId || null, toId || null], function(err) {
@@ -43,7 +62,8 @@ io.on('connection', socket => {
     });
   });
 
-  socket.on('message', ({ fromId, toId, body }) => {
+  socket.on('message', ({ toId, body }) => {
+  const fromId = socket.user && socket.user.id; if(!fromId) return;
     const stmt = `INSERT INTO messages (from_user, to_user, body) VALUES (?, ?, ?)`;
     db.run(stmt, [fromId || null, toId || null, body || ''], function(err) {
       if (err) console.error('db insert message error', err);
